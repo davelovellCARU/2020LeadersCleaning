@@ -20,7 +20,7 @@ library("here")
 dataPlace <- here::here("data")
 if(!dir.exists(dataPlace)) dir.create(dataPlace)
 
-existingInLocal <- paste0(dataPlace, "portmouthExistingLeaders2020Unclean.csv")
+existingInLocal <- paste0(dataPlace, "/portmouthExistingLeaders2020Unclean.csv")
 existingInODrive <- "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\unclean\\portsmouthExistingLeaders2020Unclean.csv"
 
 # Look for existing leaders data in local dir and in O. Crash if not found.
@@ -35,7 +35,7 @@ if(file.exists(existingInLocal)) {
 
   existingLeaders <- suppressMessages(readr::read_csv(existingInLocal))
 
-  newInLocal <- paste0(dataPlace, "portmouthNewLeaders2020Unclean.csv")
+  newInLocal <- paste0(dataPlace, "/portmouthNewLeaders2020Unclean.csv")
   newInODrive <- "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\unclean\\portsmouthNewLeaders2020Unclean.csv"
 
 # Look for New leaders data in local dir and in O. Crash if not found.
