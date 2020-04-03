@@ -13,6 +13,21 @@ knitr::opts_chunk$set(echo = TRUE)
 library("here")
 ```
 
+## About this Data
+
+The column names for this data were edited from Survey Monkey questions in Excel. The names have been chosen for consistency with other cleaned leaders data sets. 
+
+### Differences between this data and previous leaders data
+
+Some fields are encoded differently in the online instrument - such as the days and times of gatherings, which were explicitly captured in separate fields. Leader contact details have likewise been captured in 'address 1', 'address 2' and 'postcode' type fields. These will need to be concatenated into a single address field.
+
+For the sake of explicit consent, the contact details of additional leaders were captured in a seperate survey. These will need to be joined. 
+
+Also the question 'which is primarily responsible for the decision making of the fresh expression' was accidentally formatted to accept multiple responses. Only one person ticked 'fxc' and 'sending church'. Weirdly it's slightly consistent, because 'primarily' was added in this trance - lots of people just wrote 'both' in the old survey.
+
+
+
+
 ## Create Architecture
 
 ```{r createArchitecture}
