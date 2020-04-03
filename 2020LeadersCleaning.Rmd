@@ -28,42 +28,50 @@ Also the question 'which is primarily responsible for the decision making of the
 
 
 
-## Create Architecture
+## Create Architecture & Find Data
 
 ```{r createArchitecture}
 # Create data directory --------------------------------------------------------------
-dataPlace <- here::here("data")
-if(!dir.exists(dataPlace)) dir.create(dataPlace)
+localDataDir <- paste0(here::here(),"/data")
+if(!dir.exists(localDataDir)) dir.create(localDataDir)
 
-existingInLocal <- paste0(dataPlace, "/portmouthExistingLeaders2020Unclean.csv")
-existingInODrive <- "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\unclean\\portsmouthExistingLeaders2020Unclean.csv"
+# Locations where data might be ------------------------------------------------------
+ODataDir <- "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\unclean"
 
-# Look for existing leaders data in local dir and in O. Crash if not found.
-if(file.exists(existingInLocal)) {
-  writeLines("Existing Leaders Data found in data directory")
-  } else if(file.exists(existingInODrive)) {
-    file.copy(existingInODrive, existingInLocal)
-    writeLines("Existing Leaders Data found in O Drive. Copying into data directory")
-  } else {
-    stop("Existing Leaders Data not found. Please place 'portsmouthExistingLeaders2020Unclean.csv` in the data directory")
-  } 
+# Files to look for ------------------------------------------------------------------
+existingLeadersFile <- "portsmouthExistingLeaders2020Unclean.csv"
+newLeadersFile <- "portsmouthNewLeaders2020Unclean.csv"
 
-  existingLeaders <- suppressMessages(readr::read_csv(existingInLocal))
+### checkForFile - returns the first place it found the file --------------------------
+checkForFile <- 
+  function(file = NULL, dirs = NULL, verbose = TRUE, crash = TRUE){
+    
+    found <- FALSE
+    
+    for(dir in dirs) {
+      fullname <- paste0(dir, "/", file)
+      
+    if(file.exists(fullname)) {
+      if(verbose) writeLines(paste0(file," found in ", dir))
+      return(fullname)
+    }}
+    writeLines("File not found in any of the provided directories")
+    if(crash) stop("File not found in any of the provided directories")
+    return(NULL)
+    }
+      
+### Find the existing leaders csv and copy into data
+foundFile <- checkForFile(existingLeadersFile, c(localDataDir, ODataDir), crash = FALSE)
+fileInData <- paste0(localDataDir, "/", existingLeadersFile)
+file.copy(foundFile, fileInData)
+existingLeaders <- readr::read_csv(fileInData)
 
-  newInLocal <- paste0(dataPlace, "/portmouthNewLeaders2020Unclean.csv")
-  newInODrive <- "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\unclean\\portsmouthNewLeaders2020Unclean.csv"
+### Find the new leaders csv and copy into data
+foundFile <- checkForFile(newLeadersFile, c(localDataDir, ODataDir), crash = FALSE)
+fileInData <- paste0(localDataDir, "/", newLeadersFile)
+file.copy(foundFile, fileInData)
+existingLeaders <- readr::read_csv(fileInData)
 
-# Look for New leaders data in local dir and in O. Crash if not found.
-if(file.exists(newInLocal)) {
-  writeLines("New Leaders Data found in data directory")
-  } else if(file.exists(newInODrive)) {
-    file.copy(newInODrive, newInLocal)
-    writeLines("new Leaders Data found in O Drive. Copying into data directory")
-  } else {
-    stop("new Leaders Data not found. Please place 'portsmouthNewLeaders2020Unclean.csv` in the data directory")
-  } 
-
-  newLeaders <- suppressMessages(readr::read_csv(newInLocal))
 ```
 
 
