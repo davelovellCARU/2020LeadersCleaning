@@ -30,7 +30,9 @@ Also the question 'which is primarily responsible for the decision making of the
 
 ## Create Architecture & Find Data
 
-```{r createArchitecture}
+### Create Architecture
+
+```{r createArchitecture, message = FALSE}
 # Create data directory --------------------------------------------------------------
 localDataDir <- paste0(here::here(),"/data")
 if(!dir.exists(localDataDir)) dir.create(localDataDir)
@@ -41,7 +43,13 @@ ODataDir <- "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2
 # Files to look for ------------------------------------------------------------------
 existingLeadersFile <- "portsmouthExistingLeaders2020Unclean.csv"
 newLeadersFile <- "portsmouthNewLeaders2020Unclean.csv"
+```
 
+### Function: checkForFile
+
+Looks for a file in a vector of dirs, returns the first match as a string
+
+```{r checkForFile}
 ### checkForFile - returns the first place it found the file --------------------------
 checkForFile <- 
   function(file = NULL, dirs = NULL, verbose = TRUE, crash = TRUE){
@@ -59,7 +67,11 @@ checkForFile <-
     if(crash) stop("File not found in any of the provided directories")
     return(NULL)
     }
-      
+```
+
+### Get Files
+
+```{r getFiles}
 ### Find the existing leaders csv and copy into data
 foundFile <- checkForFile(existingLeadersFile, c(localDataDir, ODataDir))
 fileInData <- paste0(localDataDir, "/", existingLeadersFile)
