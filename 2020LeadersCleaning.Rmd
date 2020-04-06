@@ -71,20 +71,29 @@ checkForFile <-
 
 ### Get Files
 
-```{r getFiles}
+#### Leaders of Existing fxC 2020
+
+```{r existingLeaders, collapse = TRUE}
 ### Find the existing leaders csv and copy into data
 foundFile <- checkForFile(existingLeadersFile, c(localDataDir, ODataDir))
 fileInData <- paste0(localDataDir, "/", existingLeadersFile)
 file.copy(foundFile, fileInData)
 existingLeaders <- readr::read_csv(fileInData)
+```
 
+#### Leaders of New fxc 2020
+
+```{r newLeaders, collapse = TRUE}
 ### Find the new leaders csv and copy into data
 foundFile <- checkForFile(newLeadersFile, c(localDataDir, ODataDir))
 fileInData <- paste0(localDataDir, "/", newLeadersFile)
 file.copy(foundFile, fileInData)
 existingLeaders <- readr::read_csv(fileInData)
+```
 
+#### Combined leaders data from 2018 & 2018 tranches
 
+```{r oldLeaders, collapse = TRUE}
 ### Find the old leaders rdat and copy into data
 foundFile <- checkForFile("leadersResponses2018and2019.rdat",c(localDataDir, "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\leaders & attenders"))
 fileInData <- paste0(localDataDir, "/leadersResponses2018and2019.rdat")
