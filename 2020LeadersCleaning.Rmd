@@ -25,7 +25,7 @@ For the sake of explicit consent, the contact details of additional leaders were
 
 Also the question 'which is primarily responsible for the decision making of the fresh expression' was accidentally formatted to accept multiple responses. Only one person ticked 'fxc' and 'sending church'. Weirdly it's slightly consistent, because 'primarily' was added in this trance - lots of people just wrote 'both' in the old survey.
 
-
+The question about roles for new fxC leaders (priest in charge / church army minister / 25 other things) was quietly recoded in Excel (shhh) - only three respondents and they all only selected one response, so no need to consider each response as a separate column. In any case what will we use that data for?
 
 
 ## Create Architecture & Find Data
