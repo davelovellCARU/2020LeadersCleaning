@@ -61,17 +61,23 @@ checkForFile <-
     }
       
 ### Find the existing leaders csv and copy into data
-foundFile <- checkForFile(existingLeadersFile, c(localDataDir, ODataDir), crash = FALSE)
+foundFile <- checkForFile(existingLeadersFile, c(localDataDir, ODataDir))
 fileInData <- paste0(localDataDir, "/", existingLeadersFile)
 file.copy(foundFile, fileInData)
 existingLeaders <- readr::read_csv(fileInData)
 
 ### Find the new leaders csv and copy into data
-foundFile <- checkForFile(newLeadersFile, c(localDataDir, ODataDir), crash = FALSE)
+foundFile <- checkForFile(newLeadersFile, c(localDataDir, ODataDir))
 fileInData <- paste0(localDataDir, "/", newLeadersFile)
 file.copy(foundFile, fileInData)
 existingLeaders <- readr::read_csv(fileInData)
 
+
+### Find the old leaders rdat and copy into data
+foundFile <- checkForFile("leadersResponses2018and2019.rdat",c(localDataDir, "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\leaders & attenders"))
+fileInData <- paste0(localDataDir, "/leadersResponses2018and2019.rdat")
+file.copy(foundFile, fileInData)
+oldLeaders <- readRDS(fileInData)
 ```
 
 
