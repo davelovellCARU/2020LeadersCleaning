@@ -111,3 +111,21 @@ oldLeaders <- readRDS(fileInData)
 ```
 
 
+### Review Names
+
+```{r reviewNames, collapse = TRUE}
+names(newLeaders) %>% 
+  {.[!(. %in% names(existingLeaders))]}
+
+names(existingLeaders) %>% 
+  {.[!(. %in% names(newLeaders))]}
+```
+
+## Clean Data
+
+
+### Check Consent
+
+Collapse all consents into 
+
+
