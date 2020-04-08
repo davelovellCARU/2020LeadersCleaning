@@ -13,6 +13,9 @@ knitr::opts_chunk$set(echo = TRUE)
 library("here")
 library("readr")
 library("magrittr")
+library("dplyr")
+library("tidyr")
+library("purrr")
 ```
 
 ## About this Data
@@ -79,7 +82,7 @@ checkForFile <-
 ### Find the existing leaders csv and copy into data
 foundFile <- checkForFile(existingLeadersFile, c(ODataDir, localDataDir))
 fileInData <- paste0(localDataDir, "/", existingLeadersFile)
-file.copy(foundFile, fileInData, overwrite = TRUE)
+if(foundFile != fileInData) file.copy(foundFile, fileInData, overwrite = TRUE)
 existingLeaders <- suppressMessages(readr::read_csv(fileInData))
 ```
 
@@ -125,6 +128,30 @@ names(existingLeaders) %>%
 
 
 ### Check Consent
+
+See all unique consent responses
+
+```{r checkConsent}
+newLeaders %>%
+  select(paste0("consent_", as.character(1:5))) %>%
+  pivot_longer(everything()) %>% 
+  pull %>% 
+  unique()
+
+existingLeaders %>%
+  select(paste0("consent_", as.character(1:5))) %>% 
+  pivot_longer(everything()) %>% 
+  pull %>% 
+  unique()
+```
+
+Make all consents logicals:
+
+```{r logicaliseConsents}
+newLeaders %<>%
+  mutate(across(paste0("consent_", as.character(1:5))),
+         negate(is.na))
+```
 
 Collapse all consents into 
 
