@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r libraries, message = FALSE, warning = FALSE}
 library("here")
 library("readr")
+library("magrittr")
 ```
 
 ## About this Data
