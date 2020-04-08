@@ -1,5 +1,5 @@
 ---
-title: "cleaining2020Leaders"
+title: "Cleaning 2020 Leaders Data"
 author: "Dave Lovell"
 date: "02/04/2020"
 output: html_document
@@ -11,6 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ```{r libraries, message = FALSE, warning = FALSE}
 library("here")
+library("readr")
 ```
 
 ## About this Data
@@ -78,7 +79,7 @@ checkForFile <-
 foundFile <- checkForFile(existingLeadersFile, c(ODataDir, localDataDir))
 fileInData <- paste0(localDataDir, "/", existingLeadersFile)
 file.copy(foundFile, fileInData)
-existingLeaders <- readr::read_csv(fileInData)
+existingLeaders <- suppressMessages(readr::read_csv(fileInData))
 ```
 
 #### Leaders of New fxc 2020
@@ -88,7 +89,14 @@ existingLeaders <- readr::read_csv(fileInData)
 foundFile <- checkForFile(newLeadersFile, c(ODataDir, localDataDir))
 fileInData <- paste0(localDataDir, "/", newLeadersFile)
 file.copy(foundFile, fileInData)
-existingLeaders <- readr::read_csv(fileInData)
+newLeaders <- suppressMessages(readr::read_csv(fileInData))
+```
+
+#### New Data Overview
+
+```{r newDataOverview, collapse = TRUE}
+spec(existingLeaders)
+spec(newLeaders)
 ```
 
 #### Combined leaders data from 2018 & 2018 tranches
