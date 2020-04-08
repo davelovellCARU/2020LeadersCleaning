@@ -16,6 +16,7 @@ library("magrittr")
 library("dplyr")
 library("tidyr")
 library("purrr")
+library("knitr")
 ```
 
 ## About this Data
@@ -148,18 +149,45 @@ existingLeaders %>%
 Make all consents logicals:
 
 ```{r logicaliseConsents}
+## Character vector of consent column names
 consents <- paste0("consent_", as.numeric(1:5))
 consents
 
+## Make all consent columns logicals
 newLeaders %<>%
-  mutate(across(consents, negate(is.na)))
+  mutate(across(all_of(consents), negate(is.na)))
 
 existingLeaders %<>%
-  mutate(across(consents, negate(is.na)))
+  mutate(across(all_of(consents), negate(is.na)))
 ```
 
 Collapse all consents into a single "do you consent to everything?" column
 
-```{r collapseConsents}
+```{r collapseConsents, results = "asis"}
+# 'Collapse' consent fields into a single variable [all(consent)] and use to remove non-consenting respondents. ------------------------------------
+newLeaders <-
+  newLeaders %>% 
+  pivot_longer(all_of(consents), names_prefix = "consent_", names_to = "whichConsent", values_to = "doesConsent") %>%
+  select(-whichConsent) %>% 
+  group_by(sm_responseId) %T>%
+  # Table summarising how many respondents did/did not consent to everything
+  {writeLines(kable(
+    summarise(., consentToAll = all(doesConsent)) %>% 
+           group_by(consentToAll) %>% 
+           summarise(respondents = n())))} %>% 
+  filter(all(doesConsent)) %>% #only keep responses where all required consent is given
+  distinct
 
+existinLeaders <-
+  existingLeaders %>%
+  pivot_longer(all_of(consents), names_prefix = "consent_", names_to = "whichConsent", values_to = "doesConsent") %>%
+  select(-whichConsent) %>% 
+  group_by(sm_responseId) %T>%
+  # Table summarising how many respondents did/did not consent to everything
+  {writeLines(kable(
+    summarise(., consentToAll = all(doesConsent)) %>% 
+           group_by(consentToAll) %>% 
+           summarise(respondents = n())))} %>% 
+  filter(all(doesConsent)) %>% #only keep responses where all required consent is given
+  distinct
 ```
