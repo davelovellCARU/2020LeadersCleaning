@@ -89,7 +89,7 @@ existingLeaders <- suppressMessages(readr::read_csv(fileInData))
 ### Find the new leaders csv and copy into data
 foundFile <- checkForFile(newLeadersFile, c(ODataDir, localDataDir))
 fileInData <- paste0(localDataDir, "/", newLeadersFile)
-file.copy(foundFile, fileInData, overwrite = TRUE)
+if(foundFile != fileInData) file.copy(foundFile, fileInData, overwrite = TRUE)
 newLeaders <- suppressMessages(readr::read_csv(fileInData))
 ```
 
@@ -106,7 +106,7 @@ spec(newLeaders)
 ### Find the old leaders rdat and copy into data
 foundFile <- checkForFile("leadersResponses2018and2019.rdat",c("O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Data\\leaders & attenders", localDataDir))
 fileInData <- paste0(localDataDir, "/leadersResponses2018and2019.rdat")
-file.copy(foundFile, fileInData)
+if(foundFile != fileInData) file.copy(foundFile, fileInData, overwrite = TRUE)
 oldLeaders <- readRDS(fileInData)
 ```
 
