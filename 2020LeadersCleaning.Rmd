@@ -148,11 +148,18 @@ existingLeaders %>%
 Make all consents logicals:
 
 ```{r logicaliseConsents}
+consents <- paste0("consent_", as.numeric(1:5))
+consents
+
 newLeaders %<>%
-  mutate(across(paste0("consent_", as.character(1:5))),
-         negate(is.na))
+  mutate(across(consents, negate(is.na)))
+
+existingLeaders %<>%
+  mutate(across(consents, negate(is.na)))
 ```
 
-Collapse all consents into 
+Collapse all consents into a single "do you consent to everything?" column
 
+```{r collapseConsents}
 
+```
