@@ -17,6 +17,7 @@ library("dplyr")
 library("tidyr")
 library("purrr")
 library("knitr")
+library("stringr")
 ```
 
 ## About this Data
@@ -194,4 +195,52 @@ existingLeaders <-
   filter(all(doesConsent)) %>% #only keep responses where all required consent is given
   ungroup %>% 
   distinct
+```
+
+## Resolve discrepancies
+
+Want to put these tibbles together so don't have to do everything twice - but this requires dealing with an error in the survey: `existingLeaders` has `ste_decisionResponsibilityFxc` and `ste_decisionResponsibilitySendingChurch` because _somebody_ (it was me) didn't specify that the question should only have one response. And so:
+
+```{r showdecisionResponsibility, results = "asis"}
+# Table of responses to ste_decisionResponsibility in 'newLeaders' -----------------
+newLeaders %>% 
+  pull(ste_decisionResponsibility) %>% 
+  table %>% 
+  kable
+
+# Table of responses to ste_decisionResponsibilityFxc AND ste_decisionResponsibilitySendingChurch in 'existingLeaders' -----------------
+existingLeaders %>% 
+  group_by(ste_decisionResponsibilityFxc, ste_decisionResponsibilitySendingChurch) %>% 
+  summarise(respondents = n()) %>% 
+  kable
+```
+
+Three respondents ticked both options, even though the question specified "which is **primarily** responsible for the decision making of the fresh expression?" Hmmm. I guess we'll have to turn the 'boths' into their own level in a new factor. Here goes.
+
+Actually first let's build a clever little function for turning columns into logicals where NA is false.
+
+```{r naMachine}
+makeNaLogical <-
+  function(tibble, columnnames) {
+    # Check that everything has a length(unique(.)) <2, warn if not.
+    informationLossColumns <-
+    tibble %>% 
+      ungroup %>% 
+      summarise(across(columnnames, ~ length(unique(.)))) %>% 
+      select_if(~ .[1] > 2) %>% 
+      names
+
+newTibble <-
+  tibble %>% 
+  mutate(across(all_of(columnNames),
+                negate(is.na)))
+
+    if(length(informationLossColumns > 0)) warning(paste0(c("Information has been lost from these columns: ", paste0(informationLossColumns, ", "))))
+  
+return(newTibble)
+}
+```
+
+```{r makeDecisionStuffFactor}
+
 ```
