@@ -226,13 +226,13 @@ makeNaLogical <-
     informationLossColumns <-
     tibble %>% 
       ungroup %>% 
-      summarise(across(columnnames, ~ length(unique(.)))) %>% 
+      summarise(across(all_of(columnnames), ~ length(unique(.)))) %>% 
       select_if(~ .[1] > 2) %>% 
       names
 
 newTibble <-
   tibble %>% 
-  mutate(across(all_of(columnNames),
+  mutate(across(all_of(columnnames),
                 negate(is.na)))
 
     if(length(informationLossColumns > 0)) warning(paste0(c("Information has been lost from these columns: ", paste0(informationLossColumns, ", "))))
@@ -241,6 +241,8 @@ return(newTibble)
 }
 ```
 
-```{r makeDecisionStuffFactor}
+Cool. Now use that function as part of the process of turning the decision making response columns into a single vector.
 
+```{r makeDecisionStuffFactor}
+existingLeaders %<>% makeNaLogical(c("ste_decisionResponsibilityFxc", "ste_decisionResponsibilitySendingChurch"))
 ```
