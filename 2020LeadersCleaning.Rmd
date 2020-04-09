@@ -164,30 +164,34 @@ existingLeaders %<>%
 Collapse all consents into a single "do you consent to everything?" column
 
 ```{r collapseConsents, results = "asis"}
-# 'Collapse' consent fields into a single variable [all(consent)] and use to remove non-consenting respondents. ------------------------------------
+# 'Collapse' consent fields into a single variable [all(consent)] and use to remove non-consenting respondents.
 newLeaders <-
   newLeaders %>% 
   pivot_longer(all_of(consents), names_prefix = "consent_", names_to = "whichConsent", values_to = "doesConsent") %>%
   select(-whichConsent) %>% 
   group_by(sm_responseId) %T>%
-  # Table summarising how many respondents did/did not consent to everything
+  # Table summarising how many respondents did/did not consent to everything --------
   {writeLines(kable(
     summarise(., consentToAll = all(doesConsent)) %>% 
            group_by(consentToAll) %>% 
            summarise(respondents = n())))} %>% 
+  #-----------------------------------------------------------------------------------
   filter(all(doesConsent)) %>% #only keep responses where all required consent is given
+  ungroup %>% 
   distinct
 
-existinLeaders <-
+existingLeaders <-
   existingLeaders %>%
   pivot_longer(all_of(consents), names_prefix = "consent_", names_to = "whichConsent", values_to = "doesConsent") %>%
   select(-whichConsent) %>% 
   group_by(sm_responseId) %T>%
-  # Table summarising how many respondents did/did not consent to everything
+  # Table summarising how many respondents did/did not consent to everything ---------
   {writeLines(kable(
     summarise(., consentToAll = all(doesConsent)) %>% 
            group_by(consentToAll) %>% 
            summarise(respondents = n())))} %>% 
+  #-----------------------------------------------------------------------------------
   filter(all(doesConsent)) %>% #only keep responses where all required consent is given
+  ungroup %>% 
   distinct
 ```
