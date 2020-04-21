@@ -245,4 +245,31 @@ Cool. Now use that function as part of the process of turning the decision makin
 
 ```{r makeDecisionStuffFactor}
 existingLeaders %<>% makeNaLogical(c("ste_decisionResponsibilityFxc", "ste_decisionResponsibilitySendingChurch"))
+
+existingLeaders %<>%
+  {rowwise(.) %>% 
+      mutate(ste_decisionResponsibility =
+               {
+                 if(ste_decisionResponsibilityFxc &&
+                    ste_decisionResponsibilitySendingChurch) "fxcAndSendingChurch"
+                 else if(ste_decisionResponsibilityFxc) "fxc"
+                 else if(ste_decisionResponsibilitySendingChurch) "sendingChurch"
+    else NA
+               } %>% 
+      as.factor)}
+```
+
+### Check that worked
+
+```{r checkNewFactorWorks}
+existingLeaders %>% 
+  group_by_at(vars(starts_with("ste_decision"))) %>% 
+  summarise
+```
+
+Nice! Drop the old columns.
+
+```{r dropOldCols}
+existingLeaders %<>% select(-ste_decisionResponsibilityFxc,
+                           -ste_decisionResponsibilitySendingChurch)
 ```
