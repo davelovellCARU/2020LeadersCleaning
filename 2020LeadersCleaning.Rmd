@@ -18,6 +18,7 @@ library("tidyr")
 library("purrr")
 library("knitr")
 library("stringr")
+library("forcats")
 ```
 
 ## About this Data
@@ -272,4 +273,19 @@ Nice! Drop the old columns.
 ```{r dropOldCols}
 existingLeaders %<>% select(-ste_decisionResponsibilityFxc,
                            -ste_decisionResponsibilitySendingChurch)
+```
+
+And change thye columns in the new leaders tibble.
+
+```{r makeNewLeadersVector}
+newLeaders %>% 
+  select(starts_with("ste_decision")) %>% 
+  summarise_all(unique) 
+
+newLeaders %<>% mutate(ste_decisionResponsibility = 
+                         factor(ste_decisionResponsibility) %>% 
+                         fct_recode("freshExpression" = "Fresh expression",
+                                    "sendingChurch" = "Sending church"))
+
+newLeaders$ste_decisionResponsibility %>% unique
 ```
