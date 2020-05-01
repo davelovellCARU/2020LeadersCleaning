@@ -316,30 +316,54 @@ Bind the tibbles
 leaders <- rbind(existingLeaders, newLeaders)
 glimpse(leaders)
 ```
-<!-- ### Logicals -->
 
-<!-- Many sections of the survey can be intepreted as logicals. Test this: -->
+## Tidy the data
 
-<!-- ```{r findLogicals} -->
-<!-- responses %>%  -->
-<!--   mutate_all(as.character) %>%  -->
-<!--   select(contains("mot_"), -->
-<!--          contains("train_"), -->
-<!--          contains("trad_"), -->
-<!--          contains("desc_"), -->
-<!--          contains("geog_"), -->
-<!--          contains("bib_"), -->
-<!--          contains("wor_"), -->
-<!--          contains("com_"), -->
-<!--          contains("ts_"), -->
-<!--          contains("sf_"), -->
-<!--          contains("sg_"), -->
-<!--          contains("sr_"), -->
-<!--          contains("dis_"), -->
-<!--          contains("eva_"), -->
-<!--          -contains("other"), -->
-<!--          -contains("notAtThisStage")) %>%  -->
-<!--   pivot_longer(everything()) %>%  -->
-<!--   pull(value) %>%  -->
-<!--   unique  -->
-<!-- ``` -->
+Lots of this is just ripped directly from previous cleaning
+
+### Drop Unecessary SM Metadata
+
+```{r dropSMData, collapse = TRUE}
+# mDrop all but responseId, which is as good a response Id as any
+length(unique(leaders$sm_responseId)) == nrow(leaders)
+
+leaders %<>% 
+  select(-sm_collectorId, sm_startDate, sm_endDate, sm_ip)
+```
+
+
+### Logicals
+
+Get everything with only one or two unique responses
+
+```{r findTwoUniques}
+# Entirely homogenous columns
+leaders %>% 
+  select_if(~ length(unique(.)) == 1)
+```
+Many sections of the survey can be intepreted as logicals. Test this:
+
+```{r findLogicals}
+leaders %>%
+  ungroup %>% 
+  mutate_all(as.character) %>%
+  select(contains("mot_"),
+         contains("train_"),
+         contains("trad_"),
+         contains("desc_"),
+         contains("geog_"),
+         contains("bib_"),
+         contains("wor_"),
+         contains("com_"),
+         contains("ts_"),
+         contains("sf_"),
+         contains("sg_"),
+         contains("sr_"),
+         contains("dis_"),
+         contains("eva_"),
+         -contains("other"),
+         -contains("notAtThisStage")) %>%
+  pivot_longer(everything()) %>%
+  pull(value) %>%
+  unique
+```
