@@ -297,8 +297,25 @@ newLeaders %<>% mutate(surveyType = factor("new", levels = c("existing", "new"))
 names(existingLeaders) %>% 
   {.[!(. %in% names(newLeaders))]} %>% 
   length == 0
+
 ```
 
+Add columns from new into existing as NAs
+
+```{r makeNACols}
+# Get names to add
+namesToAdd <- names(newLeaders) %>% {.[!(. %in% names(existingLeaders))]}
+
+# Add NA columns
+existingLeaders[ , namesToAdd] <- NA
+```
+
+Bind the tibbles
+
+```{r bindTibbles}
+leaders <- rbind(existingLeaders, newLeaders)
+glimpse(leaders)
+```
 <!-- ### Logicals -->
 
 <!-- Many sections of the survey can be intepreted as logicals. Test this: -->
