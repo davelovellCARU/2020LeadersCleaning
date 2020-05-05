@@ -404,3 +404,77 @@ leaders %>%
 glimpse(leaders)
 
 ```
+
+### All NA
+
+```{r getAllNa}
+leaders %>% 
+  select_if(~ all(is.na(.))) %>% 
+  names
+```
+
+Drop some of those
+
+```{r dropSomeAllNas}
+leaders %<>%  select(-bui_type_2, -bui_type_3,
+                     -bui_ownership_2, bui_ownership_3,
+                     -bui_license_2, -bui_license_3)
+
+leaders %<>% rename("bui_type" = bui_type_1,
+                    "bui_ownership" = bui_ownership_1,
+                    "bui_license" = bui_license_1)
+```
+Non-ordered factors are easy:
+
+```{r makeFactors}
+leaders %<>%
+  mutate_at(c("lead_gender", "df_denominationalFeatures",
+              "bui_type", "bui_ownership", "bui_license", "bui_legalStatus",
+              "mis_dynamic", "sac_whoPresidesCommunion", "sac_whoPresidesBaptism"), as.factor)
+```
+
+Ordered factors take a little longer:
+
+
+```{r makeOrderedFactors}
+leaders %<>%
+  mutate(info_frequency =
+           info_frequency %>%
+           factor(levels = c("Weekly", "Fortnightly", "Monthly"),
+                  ordered = TRUE),
+         info_day_1 =
+           info_day_1 %>%
+           factor(levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
+                  ordered = TRUE),
+        info_day_2 =
+           info_day_2 %>%
+           factor(levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
+                  ordered = TRUE),
+        info_day_3 =
+           info_day_3 %>%
+           factor(levels = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"),
+                  ordered = TRUE),
+         lead_payStatus =
+           lead_payStatus %>%
+           factor(levels = c("Voluntary", "Locally paid", "Stipendiary"),
+                  ordered = TRUE),
+         lead_time =
+           lead_time %>%
+           str_replace_all("-"," ") %>%
+           str_to_title %>%
+           factor(levels = c("Spare Time", "Part Time", "Full Time"),
+                  ordered = TRUE),
+         dive_typicality =
+           dive_typicality %>%
+           factor(levels = c("Slightly", "Moderately", "Mainly", "Totally"),
+                  ordered = TRUE),
+         dive_diversity =
+           dive_diversity %>%
+           factor(levels = c("Prefer not to say", "One ethnic background",
+                             "A few ethnic backgrounds",
+                             "Wide diversity of ethnic backgrounds")),
+         )
+
+glimpse(leaders)
+
+```
