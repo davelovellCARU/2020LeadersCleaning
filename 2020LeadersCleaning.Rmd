@@ -328,19 +328,25 @@ Lots of this is just ripped directly from previous cleaning
 length(unique(leaders$sm_responseId)) == nrow(leaders)
 
 leaders %<>% 
-  select(-sm_collectorId, sm_startDate, sm_endDate, sm_ip)
+  select(-sm_collectorId, -sm_startDate, -sm_endDate, -sm_ip)
 ```
 
+### Fix phone numbers
 
+```{r fixPhoneNumbers}
+### or maybe do this in the csv?
+```
 ### Logicals
 
 Get everything with only one or two unique responses
 
 ```{r findTwoUniques}
-# Entirely homogenous columns
+# Cols that might work as logicals
 leaders %>% 
-  select_if(~ length(unique(.)) == 1)
+  select_if(~ length(unique(.)) < 3) %>% 
+  names
 ```
+
 Many sections of the survey can be intepreted as logicals. Test this:
 
 ```{r findLogicals}
@@ -366,4 +372,35 @@ leaders %>%
   pivot_longer(everything()) %>%
   pull(value) %>%
   unique
+```
+
+Those can all be encoded as logicals
+
+```{r makeSomeColsLogicals}
+leaders %>%
+  ungroup %>% 
+  mutate(across(c(
+    contains("mot_"),
+         contains("train_"),
+         contains("trad_"),
+         contains("desc_"),
+         contains("geog_"),
+         contains("bib_"),
+         contains("wor_"),
+         contains("com_"),
+         contains("ts_"),
+         contains("sf_"),
+         contains("sg_"),
+         contains("sr_"),
+         contains("dis_"),
+         contains("eva_"),
+         -contains("other"),
+         -contains("notAtThisStage")), negate(is.na))) ->
+  leaders
+```
+
+```{r glimpse}
+
+glimpse(leaders)
+
 ```
