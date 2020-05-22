@@ -347,6 +347,16 @@ leaders %>%
   names
 ```
 
+Do a cheeky rename here because I made a mistake:
+
+```{r cheekyRename}
+leaders %<>% rename("lead_train_msm" = "lead_training_msm",
+                    "lead_office" = "lead_role_1",
+                    "geog_expandedVillage" = "goeg_expandedVillage",
+                    "desc_childFocused" = "childFocused",
+                    "desc_seeker" = "desk_seeker") # lol
+
+```
 Many sections of the survey can be intepreted as logicals. Test this:
 
 ```{r findLogicals}
@@ -394,8 +404,11 @@ leaders %>%
          contains("sr_"),
          contains("dis_"),
          contains("eva_"),
+    starts_with("sac_bap_"),
+    starts_with("sac_con_"),
+    starts_with("sac_com_"),
          -contains("other"),
-         -contains("notAtThisStage")), negate(is.na))) ->
+         contains("notAtThisStage")), negate(is.na))) ->
   leaders
 ```
 
@@ -440,6 +453,7 @@ Ordered factors take a little longer:
 leaders %<>%
   mutate(info_frequency =
            info_frequency %>%
+           {replace(., . == "Monthly (including monthly but only during term time)", "Monthly")} %>% 
            factor(levels = c("Weekly", "Fortnightly", "Monthly"),
                   ordered = TRUE),
          info_day_1 =
@@ -460,7 +474,6 @@ leaders %<>%
                   ordered = TRUE),
          lead_time =
            lead_time %>%
-           str_replace_all("-"," ") %>%
            str_to_title %>%
            factor(levels = c("Spare Time", "Part Time", "Full Time"),
                   ordered = TRUE),
@@ -477,4 +490,35 @@ leaders %<>%
 
 glimpse(leaders)
 
+```
+
+### Columns with 2 unique values should be logicals probably
+
+Turn 'y/n' cols into logicals
+
+```{r makeLogicalsFromLogicalColumns}
+leaders %>%
+  rowwise %>% 
+  mutate(across(rlang::as_function(~ all(unique(.) %in% c("Yes", "No"))), ~ . == "Yes")) -> 
+  leaders
+```
+
+### Also some of the sacrament stuff needs to be logicals
+
+```{r newSacramentalLogicals}
+leaders %<>% mutate(across(c(starts_with("sac_") & is.character), negate(is.na)))
+```
+
+### 'Still Meeting' needs reworking
+
+```{r makeStillMeetingColLgl}
+leaders %<>% mutate(info_stillMeeting = !is.na(info_stillMeeting))
+```
+
+## Save it
+
+This will do for now
+
+```{r saveIt}
+leaders %>% saveRDS(here::here("data/leaders2020Data.rdat"))
 ```
