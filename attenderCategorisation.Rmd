@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```{r libraries}
 library("dplyr")
 library("here")
+library("magrittr")
 ```
 ## Some Old Code
 
@@ -32,6 +33,17 @@ if(file.exists(fileInO))
   oldAttenders = readRDS(here::here("data/oldAttenders.rdat"))
 }
 
+glimpse(oldAttenders)
+```
+
+For this exercise, we'll only need some of the data
+
+```{r dropBareCols}
+oldAttenders %<>%
+  select(responseType, ageGroup, regularity, transferStatus, transferReason, transferOther, childStatus, teenStatus, youngStatus, adultStatus, class1, class2, x10Years, christian, becameChristianHere)
+  
+```
+```{r obsolete}
 # 
 # oldAttenders$class1 %>% is.na %>% sum
 # # none, cool
@@ -68,4 +80,4 @@ if(file.exists(fileInO))
 #     return(x)
 #   }) %>% 
 #   filter(!itWillWork)
-  ```
+```
