@@ -1,0 +1,71 @@
+---
+title: "attendersCategorisation"
+author: "Dave Lovell"
+date: "26/05/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r libraries}
+library("dplyr")
+library("here")
+```
+## Some Old Code
+
+```{r someOldCode}
+##  black-box reverse engineering the church background categories
+## DL 190912
+
+# dir("rdats")
+
+fileInO <- "O:\\WCC\\Learning and Development\\Research\\PROJECT - Portsmouth 2019 onwards\\Strand 1 - Leaders and Attenders Surveys\\Data\\2018 Data Processing\\rdats\\attenders05-190911 fixing ages.rdat"
+
+if(file.exists(fileInO))
+{
+  oldAttenders = readRDS(fileInO)
+  file.copy(fileInO, here::here("data//oldAttenders.rdat"), overwrite = TRUE)
+} else {
+  message("Acquiring old attenders data locally - O Drive not connected")
+  oldAttenders = readRDS(here::here("data/oldAttenders.rdat"))
+}
+
+# 
+# oldAttenders$class1 %>% is.na %>% sum
+# # none, cool
+# names(oldAttenders)
+# 
+# #:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+# # Things which feed into 'class1' (heck let's rename that)
+# 
+# oldAttenders %>% rename(background = "class1",
+#                      switchReason = "class2") -> oldAttenders
+# 
+# # *ahem*
+# # Things which feed into 'background' should be:
+# # 'transferStatus' and 'transferReason' and '__status'
+# 
+# #should have done this before:
+# oldAttenders %>%
+#   mutate(notes = 
+#            replace(notes,notes=="",NA)) -> oldAttenders
+# 
+# 
+# oldAttenders %>% 
+#   select(background,transferReason,contains("Status"),ageGroup) %>%
+#   #mutate(child = ageGroup %in% c("under5","5-10")) %>% 
+#   select(-ageGroup) %>%
+#   group_by_at(vars(-background)) %>%
+#   summarise(itWillWork = length(unique(background))<2,
+#             backgrounds = toString(unique(background)),
+#             cases = n()) %>% 
+#   (function(x){
+#     writeLines("How well will this work?")
+#     print(table(x["itWillWork"]))
+#     writeLines("\nCases which black box modelling will not work for:")
+#     return(x)
+#   }) %>% 
+#   filter(!itWillWork)
+  ```
