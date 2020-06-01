@@ -104,7 +104,8 @@ newLeaders %<>%
 
 newLeaders %<>%
   rename("mot_inadequatePenetration" = "geog_inadequatePenetration",
-         "lead_train_trainingEvent" = "lead_train_trainingEven") #human error
+         "lead_train_trainingEvent" = "lead_train_trainingEven",
+         "lead_train_none" = "lead_train_non") #human error
 ```
 
 ### Mutate Columns
