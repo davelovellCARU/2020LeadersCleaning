@@ -15,6 +15,8 @@ library("here")
 library("dplyr")
 library("forcats")
 library("magrittr")
+library("carutools") # used for postcodes. Get it w/ "devtools::install_github("davelovellCARU/carutools")
+library("stringr")
 ```
 
 ## Load the Data
@@ -54,4 +56,20 @@ Some things just need renaming
 ```{r renameCols}
 oldLeaders %<>% 
   rename("info_day_1" = "info_days") # There's only 1 day in 'days'
+```
+
+### Mutate Columns
+
+Some things in old could use a `mutate()` into several columns
+
+```{r mutateCools}
+### Pulling Out Address from Old
+oldLeaders %<>%
+  mutate(info_venuePostcode = 
+           info_venueDetails %>% 
+           (carutools::ct_extract_postcode), 
+         info_venueWebsite =
+           info_venueDetails %>% 
+           str_extract("[^[:space:]]*(\\.org|\\.uk|\\.com)[^[:space:]]*") %>% 
+           str_remove_all("[:punct:]+(?=$)"))
 ```
