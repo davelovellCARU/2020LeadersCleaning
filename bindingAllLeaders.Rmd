@@ -71,6 +71,16 @@ oldLeaders %<>%
          "info_endTime_1" = "info_endTime",
          "info_startTime_2" = "info_startTime2",
          "info_endTime_2" = "info_endTime2")
+
+### Rename some sacrament cols
+### sac_bapNotAtThisStage >> sac_bap_notAtThisStage
+
+oldLeaders %<>%
+  rename_at(vars(matches("(con|sac|bap)(dont|not|impractical|lack)")),
+            ~ paste0(str_sub(.,1,7),
+                     "_",
+                     tolower(str_sub(.,8,8)),
+                     str_sub(.,9,-1)))
 ```
 
 ### Mutate Columns
