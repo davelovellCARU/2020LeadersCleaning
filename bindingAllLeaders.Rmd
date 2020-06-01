@@ -14,4 +14,23 @@ knitr::opts_chunk$set(echo = TRUE)
 library("here")
 library("dplyr")
 library("forcats")
+library("magrittr")
+```
+
+## Load the Data
+
+If the Data's not there, you might do well to run `2020LeadersCleaning.Rmd`. That _should_ get the data if you're connected to `O:/` if you're not connected to `O:/` that's too bad.
+
+```{r loadTheData}
+newLeaders <- readRDS(here::here("data/leaders2020Data.rdat"))
+oldLeaders <- readRDS(here::here("data/leadersResponses2018and2019.rdat"))
+```
+
+## Examine column names
+
+What's in one but not the other?
+
+```{r examineColNames}
+### Things in old but not in new
+names(oldLeaders) %>% {.[!(. %in% names(newLeaders))]}
 ```
