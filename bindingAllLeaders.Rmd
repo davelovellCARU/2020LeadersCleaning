@@ -87,7 +87,7 @@ oldLeaders %<>%
 
 Some things in old could use a `mutate()` into several columns
 
-```{r mutateCools}
+```{r mutateCols}
 ### Pulling Out Address from Old
 oldLeaders %<>%
   mutate(info_venuePostcode = 
