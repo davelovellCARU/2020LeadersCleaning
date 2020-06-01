@@ -49,6 +49,12 @@ Some things just need to be added as `NA`:
 ```{r emptyGenerate}
 ### New Leaders
 newLeaders[["info_deanery"]] <- NA
+newLeaders[["lead_name2"]] <- NA
+newLeaders[["lead_email2"]] <- NA
+newLeaders[["lead_phone2"]] <- NA
+newLeaders[["lead_name3"]] <- NA
+newLeaders[["lead_email3"]] <- NA
+newLeaders[["lead_phone3"]] <- NA
 
 ### Old Leaders
 oldLeaders[["sm_responseId"]] <- NA
@@ -65,6 +71,7 @@ oldLeaders
 Some things just need renaming
 
 ```{r renameCols}
+##oldLeaders
 oldLeaders %<>% 
   rename("info_day_1" = "info_days", # There's only 1 day in 'days'
          "info_startTime_1" = "info_startTime",
@@ -81,6 +88,9 @@ oldLeaders %<>%
                      "_",
                      tolower(str_sub(.,8,8)),
                      str_sub(.,9,-1)))
+##newLeaders
+newLeaders %<>%
+  rename("mot_inadequatePenetration" = "geog_inadequatePenetration") #human error
 ```
 
 ### Mutate Columns
