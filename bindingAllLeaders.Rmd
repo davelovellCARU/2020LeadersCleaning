@@ -71,5 +71,10 @@ oldLeaders %<>%
          info_venueWebsite =
            info_venueDetails %>% 
            str_extract("[^[:space:]]*(\\.org|\\.uk|\\.com)[^[:space:]]*") %>% 
-           str_remove_all("[:punct:]+(?=$)"))
+           str_remove_all("[:punct:]+(?=$)"),
+         info_venueAddress = 
+           info_venueDetails %>% ## Not this method leaves some postcodes in 'address', because they're not real postcodes. Probably fixable if you experiment with 0/O, but bun that amirite?
+           str_remove(ct_postcode_regex(anchors = FALSE)) %>% # remove postcodes
+           str_remove("[^[:space:]]*(\\.org|\\.uk|\\.com)[^[:space:]]*") %>% # remove website
+           str_remove("[[:space:][:punct:]]+(?=$)")) # trim whitespace / trailing commas etc.
 ```
