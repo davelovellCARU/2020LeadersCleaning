@@ -61,7 +61,6 @@ oldLeaders[["sm_responseId"]] <- NA
 oldLeaders[["consent_name"]] <- NA
 oldLeaders[["consent_date"]] <- NA
 oldLeaders[["info_additionalMeetings"]]  <- NA
-oldLeaders
 
 
 ```
@@ -77,7 +76,8 @@ oldLeaders %<>%
          "info_startTime_1" = "info_startTime",
          "info_endTime_1" = "info_endTime",
          "info_startTime_2" = "info_startTime2",
-         "info_endTime_2" = "info_endTime2")
+         "info_endTime_2" = "info_endTime2",
+         "com_hospitality" = "com_hospitatlity")
 
 ### Rename some sacrament cols
 ### sac_bapNotAtThisStage >> sac_bap_notAtThisStage
