@@ -45,7 +45,14 @@ names(newLeaders) %>% {.[!(. %in% names(oldLeaders))]}
 Some things just need to be added as `NA`:
 
 ```{r emptyGenerate}
+### New Leaders
 newLeaders[["info_deanery"]] <- NA
+
+### Old Leaders
+oldLeaders[["sm_responseId"]] <- NA
+oldLeaders[["consent_name"]] <- NA
+oldLeaders[["consent_date"]] <- NA
+
 
 ```
 
@@ -55,7 +62,9 @@ Some things just need renaming
 
 ```{r renameCols}
 oldLeaders %<>% 
-  rename("info_day_1" = "info_days") # There's only 1 day in 'days'
+  rename("info_day_1" = "info_days", # There's only 1 day in 'days'
+         "info_startTime_1" = "info_startTime",
+         "info_endTime_1" = "info_endTime")
 ```
 
 ### Mutate Columns
