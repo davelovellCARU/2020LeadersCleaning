@@ -107,7 +107,8 @@ oldLeaders %<>%
          "info_endTime_2" = "info_endTime2",
          "com_hospitality" = "com_hospitatlity",
          "lead_train_previousExperience" = "lead_train_fxcExperience", 
-                  "lead_train_none" = "lead_train_non")
+                  "lead_train_none" = "lead_train_non",
+         "sf_regular" = "sf_regualar")
 ##newLeaders
 
 ##Some sacrament excuse renaming
@@ -144,15 +145,17 @@ oldLeaders %<>% select(-info_venueDetails)
 
 ### Combine lead_address_1 and lead_address_2 into a single field.
 newLeaders %<>% mutate(lead_address = 
-                         paste0(str_squish(lead_address_1),
-                                ", ",
-                                str_squish(lead_address_2)),
+                         paste0(str_squish(lead_address_1), ", ",
+                                str_squish(lead_address_2), ", ",
+                                str_squish(lead_city), ", ",
+                                str_squish(lead_postCode)), 
                        info_venueAddress = 
                          paste0(str_squish(info_venueAddress), ", ",
                                 str_squish(info_venueAddress2)))
 
 newLeaders %<>% select(-lead_address_1, -lead_address_2, 
-                       -info_venueAddress2)
+                       -info_venueAddress2,
+                       -lead_city, - lead_postCode)
 
 ### Format the start and end times to be consistent
 ### newLeaders is parsed using a readr function invoked by read_csv
@@ -176,6 +179,15 @@ oldLeaders %<>%
 newLeaders %<>%
   mutate(responseId = paste0("r", 
                              as.character(sm_responseId)))
+
+### Note that the above pertain to 'is there intent?', but appear to correspond to the inverse of teh '_none' category seen in later surveys. Reproducing never gets a 'none' category, so the intent to reproduce is assumed. Seems like 'intention_only' may have at one time been computed from other results, but is now its own category. Anyway why is there a 'none'? Wouldn't it be implied by not ticking any boxes (including other / intention only?)
+oldLeaders %<>%
+  mutate(sf_none = !ts_finacing,
+         sg_none = !ts_governing)
+
+### ts_reproducing appears to have a meaning that cannot be imputed from the other responses. We will put it away forever so as not to complicate an already complicated question. Unlikely that anyone will be doing longitudinal three-self analysis with this data anyhow.
+oldLeaders %<>% select(-ts_finacing, -ts_governing, -ts_reproducing)
+
 ```
 
 ### Drop Columns
