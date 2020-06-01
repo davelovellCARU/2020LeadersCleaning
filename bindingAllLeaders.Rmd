@@ -145,6 +145,16 @@ oldLeaders %<>%
            ~ as.character(.) %>%
            str_extract("\\d\\d:\\d\\d:\\d\\d") %>%
            parse_time()))
+
+### Turn all the 'other' into 'otherDetail' get me?
+oldLeaders %<>% 
+  mutate(com_other = com_otherDetail,
+         sr_other = sr_otherDetail,
+         wor_other = wor_otherDetail,
+         desc_other = desc_otherDetail,
+         mot_other = mot_otherDetail)
+oldLeaders %<>% 
+  select(-contains("otherDetail"))
 ```
 
 ### Drop Columns
