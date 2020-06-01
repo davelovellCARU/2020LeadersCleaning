@@ -75,11 +75,13 @@ Some things just need renaming
 ### Rename some sacrament cols
 ### sac_bapNotAtThisStage >> sac_bap_notAtThisStage
 oldLeaders %<>%
-  rename_at(vars(matches("(con|sac|bap)(dont|not|impractical|lack)")),
+  rename_at(vars(matches("(con|com|bap)(Dont|Not|Impractical|lack)")),
             ~ paste0(str_sub(.,1,7),
                      "_",
                      tolower(str_sub(.,8,8)),
-                     str_sub(.,9,-1)))
+                     str_sub(.,9,-1)) %>% 
+              str_replace("dontSeeTheNeed", 
+                          "dontSeeNeed"))
 ### rename training cols
 oldLeaders %<>%
   rename_at(vars(starts_with("train_")),
@@ -94,6 +96,12 @@ oldLeaders %<>%
          "com_hospitality" = "com_hospitatlity",
          "lead_train_previousExperience" = "lead_train_fxcExperience")
 ##newLeaders
+
+##Some sacrament excuse renaming
+newLeaders %<>% 
+  rename_at(vars(contains("lackofAuthorisedPerson")),
+            ~ str_sub(., 1, -7))
+
 newLeaders %<>%
   rename("mot_inadequatePenetration" = "geog_inadequatePenetration",
          "lead_train_trainingEvent" = "lead_train_trainingEven") #human error
