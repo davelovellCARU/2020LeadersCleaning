@@ -17,6 +17,8 @@ library("forcats")
 library("magrittr")
 library("carutools") # used for postcodes. Get it w/ "devtools::install_github("davelovellCARU/carutools")
 library("stringr")
+library("lubridate")
+library("readr")
 ```
 
 ## Load the Data
@@ -88,4 +90,12 @@ oldLeaders %<>%
            str_remove("[[:space:][:punct:]]+(?=$)")) # trim whitespace / trailing commas etc.
 ### Drop venueDetails
 oldLeaders %<>% select(-info_venueDetails)
+
+### Format the start and end times to be consistent
+### newLeaders is parsed using a readr function invoked by read_csv
+oldLeaders %<>%
+  mutate(across(all_of(c("info_startTime_1", "info_endTime_1")),
+           ~ as.character(.) %>%
+           str_extract("\\d\\d:\\d\\d:\\d\\d") %>%
+           parse_time()))
 ```
