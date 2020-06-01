@@ -159,6 +159,13 @@ oldLeaders %<>%
          -sac_childConfirmations, -sac_adultConfirmations)
 ```
 
+### Add Columns
+
+Some columns need to be added to one of the tibbles
+
+```{r addCols}
+newLeaders[["tranche"]] <- factor("2020", levels = c("2018", "2019", "2020"), ordered = TRUE)
+```
 ## Review
 
 This should be empty
