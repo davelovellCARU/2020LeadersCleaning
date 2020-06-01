@@ -57,23 +57,31 @@ newLeaders[["lead_email3"]] <- NA
 newLeaders[["lead_phone3"]] <- NA
 newLeaders[["info_endYear"]] <- NA
 newLeaders[["info_stopReason"]] <- NA
+### Very little to be gained from 'bui_variety', but don't want to drop it
+newLeaders[["bui_variety"]] <- NA
 
 
 ### Old Leaders
-oldLeaders[["consent_name"]] <- NA
-oldLeaders[["consent_date"]] <- NA
 oldLeaders[["info_additionalMeetings"]]  <- NA
 oldLeaders[["surveyType"]] <- NA
 oldLeaders[["info_day_2"]] <- NA
 oldLeaders[["info_day_3"]] <- NA
 oldLeaders[["info_startTime_3"]] <- NA
 oldLeaders[["info_endTime_3"]] <- NA
+oldLeaders[["info_startDateOther"]] <- NA
+oldLeaders[["info_endYear"]] <- NA
+oldLeaders[["info_endDate"]] <- NA
+oldLeaders[["info_endMonth"]] <- NA
+oldLeaders[["info_endDateOther"]] <- NA
+oldLeaders[["info_stopReason"]] <- NA
 ### I've gone back the original Excel workbooks (ikr) and there's no field for founding leader. Maybe it wasn't asked? Embarrassingly we don't have a copy of the old new fxC questionnaire.
 oldLeaders[["founder_name"]] <- NA
 oldLeaders[["founder_leaveMonth"]] <- NA
 oldLeaders[["founder_leaveYear"]] <- NA
-
-
+### 'trainingModule' is a new option for this year - neither a planting module nor a traininge event.
+### After all the diocesan emphasis on consistentcy, a few subtle changes have been made.
+oldLeaders[["lead_train_trainingModule"]] <- NA
+oldLeaders[["lead_officeOther"]] <- NA
 
 ```
 
@@ -118,7 +126,9 @@ newLeaders %<>%
 
 newLeaders %<>%
   rename("mot_inadequatePenetration" = "geog_inadequatePenetration",
-         "lead_train_trainingEvent" = "lead_train_trainingEven") #human error
+         "lead_train_trainingEvent" = "lead_train_trainingEven", 
+         "geog_localAndPrivateEstate" = "geog_localandPrivateEstate",
+         "lead_officeOther" = "lead_roleOther") #human error
 ```
 
 ### Mutate Columns
@@ -180,6 +190,7 @@ newLeaders %<>%
   mutate(responseId = paste0("r", 
                              as.character(sm_responseId)))
 
+newLeaders %<>% select(-sm_responseId)
 ### Note that the above pertain to 'is there intent?', but appear to correspond to the inverse of teh '_none' category seen in later surveys. Reproducing never gets a 'none' category, so the intent to reproduce is assumed. Seems like 'intention_only' may have at one time been computed from other results, but is now its own category. Anyway why is there a 'none'? Wouldn't it be implied by not ticking any boxes (including other / intention only?)
 oldLeaders %<>%
   mutate(sf_none = !ts_finacing,
@@ -188,6 +199,9 @@ oldLeaders %<>%
 ### ts_reproducing appears to have a meaning that cannot be imputed from the other responses. We will put it away forever so as not to complicate an already complicated question. Unlikely that anyone will be doing longitudinal three-self analysis with this data anyhow.
 oldLeaders %<>% select(-ts_finacing, -ts_governing, -ts_reproducing)
 
+### bui_other is only used once, by somebody who doesn't know what 'ecclesial' means
+newLeaders[["bui_type"]][newLeaders[["bui_other"]] %in% "Church building"] <- "Ecclesial"
+newLeaders[["bui_other"]] <- NULL
 ```
 
 ### Drop Columns
@@ -199,7 +213,14 @@ Things we don't need
 ### This isn't a survey question and it's not reported on, so assume it's a diocesan addtion. Moslty incomplete
 oldLeaders %<>%
   select(-sac_childBaptisms, -sac_adultBaptisms,
-         -sac_childConfirmations, -sac_adultConfirmations)
+         -sac_childConfirmations, -sac_adultConfirmations, -sac_communionFrequency, - ts_notAtThisStage, -sg_legalStructure) 
+#also dropping 'not at this stage' for all three self - not meaninful in the latest tranche
+# self-governing-formal-legal-structure only appears in 2019. Drop it.
+
+newLeaders %<>%
+  select(-bui_ownership_3, #all NA - some kind of mistake
+         -lead_role, # redundant
+         - doesConsent, -consent_name, -consent_date) # they all consent
 ```
 
 ### Add Columns
@@ -208,6 +229,10 @@ Some columns need to be added to one of the tibbles
 
 ```{r addCols}
 newLeaders[["tranche"]] <- factor("2020", levels = c("2018", "2019", "2020"), ordered = TRUE)
+
+newLeaders %<>% 
+  mutate(num_averageAttendance =
+           num_averageChildren + num_averageAdults)
 ```
 ## Review
 
