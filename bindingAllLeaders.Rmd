@@ -77,4 +77,6 @@ oldLeaders %<>%
            str_remove(ct_postcode_regex(anchors = FALSE)) %>% # remove postcodes
            str_remove("[^[:space:]]*(\\.org|\\.uk|\\.com)[^[:space:]]*") %>% # remove website
            str_remove("[[:space:][:punct:]]+(?=$)")) # trim whitespace / trailing commas etc.
+### Drop venueDetails
+oldLeaders %<>% select(-info_venueDetails)
 ```
