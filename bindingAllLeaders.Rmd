@@ -124,3 +124,22 @@ oldLeaders %<>%
            str_extract("\\d\\d:\\d\\d:\\d\\d") %>%
            parse_time()))
 ```
+
+### Drop Columns
+
+Things we don't need
+
+```{r dropCols}
+### Numbers baptised / confirmed
+### This isn't a survey question and it's not reported on, so assume it's a diocesan addtion. Moslty incomplete
+oldLeaders %<>%
+  select(-sac_childBaptisms, -sac_adultBaptisms,
+         -sac_childConfirmations, -sac_adultConfirmations)
+```
+
+## Review
+
+This should be empty
+
+```{r review}
+```
