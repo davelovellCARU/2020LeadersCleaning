@@ -104,7 +104,7 @@ newLeaders %<>%
 Some things in old could use a `mutate()` into several columns
 
 ```{r mutateCols}
-### Pulling Out Address from Old
+### Pulling Out Address etc. from Old
 oldLeaders %<>%
   mutate(info_venuePostcode = 
            info_venueDetails %>% 
@@ -120,6 +120,14 @@ oldLeaders %<>%
            str_remove("[[:space:][:punct:]]+(?=$)")) # trim whitespace / trailing commas etc.
 ### Drop venueDetails
 oldLeaders %<>% select(-info_venueDetails)
+
+### Combine lead_address_1 and lead_address_2 into a single field.
+newLeaders %<>% mutate(lead_address = 
+                         paste0(str_squish(lead_address_1),
+                                ", ",
+                                str_squish(lead_address_2)))
+
+newLeaders %<>% select(-lead_address_1, -lead_address_2)
 
 ### Format the start and end times to be consistent
 ### newLeaders is parsed using a readr function invoked by read_csv
