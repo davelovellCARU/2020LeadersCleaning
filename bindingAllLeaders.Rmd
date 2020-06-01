@@ -71,26 +71,32 @@ Some things just need renaming
 
 ```{r renameCols}
 ##oldLeaders
-oldLeaders %<>% 
-  rename("info_day_1" = "info_days", # There's only 1 day in 'days'
-         "info_startTime_1" = "info_startTime",
-         "info_endTime_1" = "info_endTime",
-         "info_startTime_2" = "info_startTime2",
-         "info_endTime_2" = "info_endTime2",
-         "com_hospitality" = "com_hospitatlity")
 
 ### Rename some sacrament cols
 ### sac_bapNotAtThisStage >> sac_bap_notAtThisStage
-
 oldLeaders %<>%
   rename_at(vars(matches("(con|sac|bap)(dont|not|impractical|lack)")),
             ~ paste0(str_sub(.,1,7),
                      "_",
                      tolower(str_sub(.,8,8)),
                      str_sub(.,9,-1)))
+### rename training cols
+oldLeaders %<>%
+  rename_at(vars(starts_with("train_")),
+            ~ paste0("lead_train_", 
+                     str_sub(.,7,-1)))
+oldLeaders %<>% 
+  rename("info_day_1" = "info_days", # There's only 1 day in 'days'
+         "info_startTime_1" = "info_startTime",
+         "info_endTime_1" = "info_endTime",
+         "info_startTime_2" = "info_startTime2",
+         "info_endTime_2" = "info_endTime2",
+         "com_hospitality" = "com_hospitatlity",
+         "lead_train_previousExperience" = "lead_train_fxcExperience")
 ##newLeaders
 newLeaders %<>%
-  rename("mot_inadequatePenetration" = "geog_inadequatePenetration") #human error
+  rename("mot_inadequatePenetration" = "geog_inadequatePenetration",
+         "lead_train_trainingEvent" = "lead_train_trainingEven") #human error
 ```
 
 ### Mutate Columns
@@ -143,5 +149,5 @@ This should be empty
 
 ```{r review}
 names(oldLeaders) %>% {.[!(. %in% names(newLeaders))]}
-names(newLeaders %>% {.[!(. %in% names(oldLeaders))]})
+names(newLeaders) %>% {.[!(. %in% names(oldLeaders))]}
 ```
