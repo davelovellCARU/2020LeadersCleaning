@@ -33,4 +33,5 @@ What's in one but not the other?
 ```{r examineColNames}
 ### Things in old but not in new
 names(oldLeaders) %>% {.[!(. %in% names(newLeaders))]}
+names(newLeaders) %>% {.[!(. %in% names(oldLeaders))]}
 ```
