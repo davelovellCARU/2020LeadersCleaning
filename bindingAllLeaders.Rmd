@@ -55,6 +55,9 @@ newLeaders[["lead_phone2"]] <- NA
 newLeaders[["lead_name3"]] <- NA
 newLeaders[["lead_email3"]] <- NA
 newLeaders[["lead_phone3"]] <- NA
+newLeaders[["info_endYear"]] <- NA
+newLeaders[["info_stopReason"]] <- NA
+
 
 ### Old Leaders
 oldLeaders[["sm_responseId"]] <- NA
@@ -94,7 +97,8 @@ oldLeaders %<>%
          "info_startTime_2" = "info_startTime2",
          "info_endTime_2" = "info_endTime2",
          "com_hospitality" = "com_hospitatlity",
-         "lead_train_previousExperience" = "lead_train_fxcExperience")
+         "lead_train_previousExperience" = "lead_train_fxcExperience", 
+                  "lead_train_none" = "lead_train_non")
 ##newLeaders
 
 ##Some sacrament excuse renaming
@@ -104,8 +108,7 @@ newLeaders %<>%
 
 newLeaders %<>%
   rename("mot_inadequatePenetration" = "geog_inadequatePenetration",
-         "lead_train_trainingEvent" = "lead_train_trainingEven",
-         "lead_train_none" = "lead_train_non") #human error
+         "lead_train_trainingEvent" = "lead_train_trainingEven") #human error
 ```
 
 ### Mutate Columns
@@ -139,7 +142,8 @@ newLeaders %<>% mutate(lead_address =
                          paste0(str_squish(info_venueAddress), ", ",
                                 str_squish(info_venueAddress2)))
 
-newLeaders %<>% select(-lead_address_1, -lead_address_2)
+newLeaders %<>% select(-lead_address_1, -lead_address_2, 
+                       -info_venueAddress2)
 
 ### Format the start and end times to be consistent
 ### newLeaders is parsed using a readr function invoked by read_csv
