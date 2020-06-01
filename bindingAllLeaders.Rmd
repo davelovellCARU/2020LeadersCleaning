@@ -142,4 +142,6 @@ oldLeaders %<>%
 This should be empty
 
 ```{r review}
+names(oldLeaders) %>% {.[!(. %in% names(newLeaders))]}
+names(newLeaders %>% {.[!(. %in% names(oldLeaders))]})
 ```
