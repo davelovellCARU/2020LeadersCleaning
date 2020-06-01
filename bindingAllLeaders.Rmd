@@ -60,10 +60,19 @@ newLeaders[["info_stopReason"]] <- NA
 
 
 ### Old Leaders
-oldLeaders[["sm_responseId"]] <- NA
 oldLeaders[["consent_name"]] <- NA
 oldLeaders[["consent_date"]] <- NA
 oldLeaders[["info_additionalMeetings"]]  <- NA
+oldLeaders[["surveyType"]] <- NA
+oldLeaders[["info_day_2"]] <- NA
+oldLeaders[["info_day_3"]] <- NA
+oldLeaders[["info_startTime_3"]] <- NA
+oldLeaders[["info_endTime_3"]] <- NA
+### I've gone back the original Excel workbooks (ikr) and there's no field for founding leader. Maybe it wasn't asked? Embarrassingly we don't have a copy of the old new fxC questionnaire.
+oldLeaders[["founder_name"]] <- NA
+oldLeaders[["founder_leaveMonth"]] <- NA
+oldLeaders[["founder_leaveYear"]] <- NA
+
 
 
 ```
@@ -163,6 +172,10 @@ oldLeaders %<>%
          mot_other = mot_otherDetail)
 oldLeaders %<>% 
   select(-contains("otherDetail"))
+
+newLeaders %<>%
+  mutate(responseId = paste0("r", 
+                             as.character(sm_responseId)))
 ```
 
 ### Drop Columns
