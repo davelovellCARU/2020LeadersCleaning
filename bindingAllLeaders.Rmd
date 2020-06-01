@@ -35,3 +35,23 @@ What's in one but not the other?
 names(oldLeaders) %>% {.[!(. %in% names(newLeaders))]}
 names(newLeaders) %>% {.[!(. %in% names(oldLeaders))]}
 ```
+
+## Sorting out columns
+
+### Generate Empty Columns
+
+Some things just need to be added as `NA`:
+
+```{r emptyGenerate}
+newLeaders[["info_deanery"]] <- NA
+
+```
+
+### Rename Columns
+
+Some things just need renaming
+
+```{r renameCols}
+oldLeaders %<>% 
+  rename("info_day_1" = "info_days") # There's only 1 day in 'days'
+```
